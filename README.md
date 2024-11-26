@@ -23,4 +23,7 @@
 - ✅ Prisma  
   pnpm install -D prisma @prisma/client  
   pnpm dlx prisma init --datasource-provider postgresql
-  To start with an existing database, run prisma db pull to pull the existing schema into schema/prisma.schema.
+  To start with an existing database, pnpm prisma db pull, to pull the existing schema into /prisma/schema.prisma
+
+- To add additinal Shadcn-svelte components  
+  pnpm dlx shadcn-svelte@latest add button
