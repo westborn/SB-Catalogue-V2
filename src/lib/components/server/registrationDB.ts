@@ -1,6 +1,6 @@
 import { prisma } from '$lib/components/server/prisma.ts';
 
-export type Exhibit = {
+export type CatalogueExhibit = {
 	artistId: number;
 	email: string;
 	lastName: string;
@@ -28,7 +28,7 @@ export type Exhibit = {
 };
 
 //TODO fix issue with non accepted entries in prior years not being filtered out
-export const getExhibits = async ({
+export const getCatalogueExhibits = async ({
 	rows,
 	offset,
 	entryYear
@@ -36,8 +36,8 @@ export const getExhibits = async ({
 	rows: number;
 	offset: number;
 	entryYear: string;
-}): Promise<Exhibit[]> => {
-	const exhibits: Exhibit[] = await prisma.$queryRaw`select
+}): Promise<CatalogueExhibit[]> => {
+	const exhibits: CatalogueExhibit[] = await prisma.$queryRaw`select
 		artist.id as "artistId",
 		artist.email,
 		artist.last_name as "lastName",

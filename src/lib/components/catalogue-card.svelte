@@ -2,8 +2,8 @@
 	import { convertToDollars, determinePlacement } from '$lib/utils.ts';
 	import { OptimisedImage } from '$lib/components/index.ts';
 	import * as Card from '$lib/components/ui/card/index.js';
-	import type { Exhibit } from '$lib/components/server/registrationDB.ts';
 
+	const data = $props();
 	const {
 		exhibitNumber,
 		registrationYear,
@@ -15,7 +15,7 @@
 		price,
 		dimensions,
 		title
-	} = $props() as Exhibit;
+	} = data;
 </script>
 
 <!-- card -->
@@ -42,7 +42,7 @@
 			<p class="text-xs">{dimensions}</p>
 			<p class="text-xs">{determinePlacement(exhibitNumber, registrationYear, inOrOut)}</p>
 		</div>
-		<p class="w-full text-center text-base font-medium">{convertToDollars(parseInt(price))}</p>
+		<p class="w-full text-center text-base font-medium">{convertToDollars(price)}</p>
 	</div>
 </Card.Root>
 <!-- card -->

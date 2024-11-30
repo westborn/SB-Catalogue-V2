@@ -73,7 +73,9 @@ export default function doublet<TCallback extends Callback>(
 		const result = cb(...(args as Array<unknown>));
 
 		if (result instanceof Promise) {
-			return result.then((rx) => [null, rx]).catch((error) => [error, null]) as MaybeAsyncResult<ReturnType<TCallback>>;
+			return result.then((rx) => [null, rx]).catch((error) => [error, null]) as MaybeAsyncResult<
+				ReturnType<TCallback>
+			>;
 		}
 
 		return [null, result] as MaybeAsyncResult<ReturnType<TCallback>>;
@@ -101,7 +103,8 @@ export const apiResponse = {
 };
 
 export function handleUnexpectedError(error: Error) {
-	const msg = 'A network error has occurred. Check the apiUrl property to ensure it is set correctly.';
+	const msg =
+		'A network error has occurred. Check the apiUrl property to ensure it is set correctly.';
 	console.error(error + ' - ' + msg);
 	return msg;
 }
@@ -149,10 +152,14 @@ export async function processResponse(response: Response) {
 	}
 }
 
-export function determinePlacement(exhibitNumberString: string, entryYear: string, inOrOut: string) {
+export function determinePlacement(
+	exhibitNumberString: string,
+	entryYear: string,
+	inOrOut: string
+) {
 	// console.log(`exhibitNumberString: ${exhibitNumberString}, entryYear: ${entryYear}, inOrOut: ${inOrOut}`);
 	// prior to 2024 just use "indoor" or "outdoor"
-	if (entryYear.localeCompare('2024') < 0) {
+	if (!entryYear || entryYear.localeCompare('2024') < 0) {
 		return inOrOut;
 	}
 	//no location determined yet

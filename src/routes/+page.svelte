@@ -5,7 +5,8 @@
 
 	import { CatalogueCard } from '$lib/components';
 	import * as Select from '$lib/components/ui/select/index.ts';
-	import type { Exhibit } from '$lib/components/server/registrationDB.js';
+	import type { CatalogueExhibit } from '$lib/components/server/registrationDB.js';
+	import { determinePlacement } from '$lib/utils.ts';
 
 	$effect(() => {
 		infiniteScroll({ getData, element });
@@ -21,27 +22,7 @@
 
 	let element = $state();
 
-	function determinePlacement(
-		exhibitNumberString: string,
-		exhibitionYear: string,
-		inOrOut: string
-	) {
-		if (parseInt(exhibitionYear) < 2024) {
-			return inOrOut;
-		}
-		const exhibitNumber = parseInt(exhibitNumberString);
-		if (exhibitNumber >= 100 && exhibitNumber < 400) {
-			return 'Headland';
-		} else if (exhibitNumber >= 400 && exhibitNumber < 500) {
-			return 'Hotel';
-		} else if (exhibitNumber >= 500 && exhibitNumber < 800) {
-			return 'Surf Gallery';
-		} else if (exhibitNumber >= 800 && exhibitNumber < 900) {
-			return 'Street Gallery';
-		}
-	}
-
-	let allExhibits: Exhibit[] = $derived($page.data.exhibits?.slice(0, 999) ?? []);
+	let allExhibits: CatalogueExhibit[] = $derived($page.data.exhibits?.slice(0, 999) ?? []);
 
 	// Setup the filter for searching / join a few fields to search on
 	// if no search term entered - return them all
@@ -85,11 +66,21 @@
 
 	let selectedYear = $state({ value: '2025', label: '2025' });
 
+	// onmount to set year if it is paassed in the URL initially
+	$effect(() => {
+		const url = new URL($page.url);
+		const year = url.searchParams.get('year');
+		if (year) {
+			selectedYear = { value: year, label: year };
+		} else {
+			selectedYear = { value: '2025', label: '2025' };
+		}
+	});
+
 	function handleSelectYear(event: any) {
 		selectedYear = { ...event };
 		const newURL = new URL($page.url);
 		newURL.searchParams?.set('year', selectedYear.value);
-		console.log(newURL.toString());
 		goto(newURL);
 	}
 </script>
