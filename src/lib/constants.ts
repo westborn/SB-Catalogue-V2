@@ -28,3 +28,4 @@ function getNextExhibitionYear(): string {
 export const EXHIBITION_YEAR = getNextExhibitionYear();
 export const GENERIC_ERROR_MESSAGE = 'Something went wrong. Please try again later.';
 export const GENERIC_ERROR_UNEXPECTED = "Something went wrong. Sorry, we're broken!";
+export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
