@@ -6,15 +6,15 @@
 	const data = $props();
 	const {
 		exhibitNumber,
-		registrationYear,
+		title,
 		artistName,
 		description,
-		cloudURL,
-		inOrOut,
 		material,
-		price,
 		dimensions,
-		title
+		price,
+		registrationYear,
+		inOrOut,
+		cloudURL
 	} = data;
 </script>
 

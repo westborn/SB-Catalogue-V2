@@ -7,6 +7,7 @@
 	import * as Select from '$lib/components/ui/select/index.ts';
 	import type { CatalogueExhibit } from '$lib/components/server/registrationDB.js';
 	import { determinePlacement } from '$lib/utils.ts';
+	import { tick } from 'svelte';
 
 	$effect(() => {
 		if (element) {
@@ -18,13 +19,14 @@
 	});
 
 	const { data } = $props();
-	let searchTerm = $state('');
+	let searchTerm = $state(''); // Search term for filtering the exhibits
+
 	const pageSize = 3; // Number of items to scroll at a time
 	let numToDisplay = $state(10);
 
 	let element = $state<HTMLElement>();
 
-	let allExhibits: CatalogueExhibit[] = $derived($page.data.exhibits?.slice(0, 999) ?? []);
+	let allExhibits: CatalogueExhibit[] = $derived($page.data.exhibits.filter(() => true) ?? []);
 
 	// Setup the filter for searching / join a few fields to search on
 	// if no search term entered - return them all
@@ -32,20 +34,18 @@
 		allExhibits.filter((x) => {
 			if (searchTerm === '') return true;
 			const location = determinePlacement(x.exhibitNumber, x.registrationYear, x.inOrOut);
-			const searchText = x.exhibitNumber + x.artistName + x.title + location;
+			const searchText = x.exhibitNumber + '|' + x.artistName + '|' + x.title + '|' + location;
 			return searchText.toLocaleLowerCase().includes(searchTerm.toLowerCase());
 		})
 	);
 
-	let exhibits = $derived(filteredEntries.slice(0, numToDisplay)); // initial page load to be greater than "body" so user can scroll
-	// let exhibits = $state(allExhibits); // initial page load to be greater than "body" so user can scroll
+	let exhibits = $derived(filteredEntries.filter((_, idx) => idx < numToDisplay));
 
 	const infiniteScroll = ({ getData, element }: { getData: any; element: HTMLElement }) => {
 		if (element) {
 			const observer = new IntersectionObserver((entries) => {
 				const first = entries[0];
-				// console.log('getting data', window.innerHeight, first.rootBounds?.top, first.boundingClientRect.top);
-				if (first.isIntersecting && exhibits.length < allExhibits.length) {
+				if (first.isIntersecting && exhibits.length < filteredEntries.length) {
 					getData();
 				}
 			});
@@ -81,6 +81,7 @@
 	function handleSelectYear(value: string) {
 		const newURL = new URL($page.url);
 		newURL.searchParams?.set('year', value);
+		numToDisplay = 10;
 		goto(newURL);
 	}
 </script>
@@ -102,7 +103,8 @@
 		<div class="w-80 rounded">
 			<input
 				bind:value={searchTerm}
-				type="search"
+				onchange={() => tick()}
+				type="text"
 				class="w-full rounded border border-solid border-gray-300 bg-white px-1 py-1.5 text-xs font-normal text-gray-700 transition ease-in-out focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none sm:text-base"
 				placeholder="Number, Title, Artist or Location"
 				aria-label="Search"
@@ -117,7 +119,7 @@
 	{:else}
 		<div>
 			<div class="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-				{#each exhibits as exhibit}
+				{#each exhibits as exhibit (exhibit.exhibitNumber)}
 					<CatalogueCard {...exhibit} />
 				{/each}
 			</div>
