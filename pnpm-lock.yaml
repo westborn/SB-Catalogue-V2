@@ -102,9 +102,6 @@ importers:
       vite:
         specifier: ^6.0.1
         version: 6.0.1(@types/node@22.10.1)(jiti@1.21.6)(yaml@2.6.1)
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
 
 packages:
 
