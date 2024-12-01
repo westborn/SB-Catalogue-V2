@@ -22,7 +22,7 @@ TAILWINDCSSVERSION: ${__TAILWINDCSSVERSION__}`);
 	<title>Catalogue</title>
 </svelte:head>
 
-<section class="pl-2 sm:container">
+<section class="px-1 sm:container">
 	<nav class=" grid h-14 grid-cols-[60px_1fr] items-center justify-center">
 		<img src="/favicon-32x32.png" alt="Sculpture Bermagui Logo" class="mt-2 h-10" />
 		<h1 class="text-lg text-primary-400">Sculpture Bermagui Catalogue</h1>

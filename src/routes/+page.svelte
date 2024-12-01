@@ -9,7 +9,9 @@
 	import { determinePlacement } from '$lib/utils.ts';
 
 	$effect(() => {
-		infiniteScroll({ getData, element });
+		if (element) {
+			infiniteScroll({ getData, element });
+		}
 		// TODO - check that we get more data than the page size for the initial display
 		// if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
 		// alert("bottom of the page reached"); }
@@ -20,7 +22,7 @@
 	const pageSize = 3; // Number of items to scroll at a time
 	let numToDisplay = $state(10);
 
-	let element = $state();
+	let element = $state<HTMLElement>();
 
 	let allExhibits: CatalogueExhibit[] = $derived($page.data.exhibits?.slice(0, 999) ?? []);
 
@@ -64,23 +66,21 @@
 		{ value: '2022', label: '2022' }
 	];
 
-	let selectedYear = $state({ value: '2025', label: '2025' });
+	let selectedYear = $state('');
 
 	// onmount to set year if it is paassed in the URL initially
 	$effect(() => {
 		const url = new URL($page.url);
 		const year = url.searchParams.get('year');
-		if (year) {
-			selectedYear = { value: year, label: year };
-		} else {
-			selectedYear = { value: '2025', label: '2025' };
-		}
+		selectedYear = year ? year : '2025';
 	});
+	const triggerYear = $derived(
+		years.find((f) => f.value === selectedYear)?.label ?? 'Select a Year'
+	);
 
-	function handleSelectYear(event: any) {
-		selectedYear = { ...event };
+	function handleSelectYear(value: string) {
 		const newURL = new URL($page.url);
-		newURL.searchParams?.set('year', selectedYear.value);
+		newURL.searchParams?.set('year', value);
 		goto(newURL);
 	}
 </script>
@@ -89,19 +89,13 @@
 	<div class="flex items-center gap-3">
 		<h4 class="text-sm font-bold text-primary sm:hidden">Year?</h4>
 		<h4 class="hidden text-xl font-bold text-primary sm:block">Exhibition Year?</h4>
-		<Select.Root onSelectedChange={handleSelectYear} selected={selectedYear}>
-			<Select.Trigger class="w-[120px]">
-				<Select.Value placeholder="Select a year" />
-			</Select.Trigger>
+		<Select.Root type="single" onValueChange={handleSelectYear} bind:value={selectedYear}>
+			<Select.Trigger class="w-[120px]">{triggerYear}</Select.Trigger>
 			<Select.Content>
-				<Select.Group>
-					<Select.Label>Year</Select.Label>
-					{#each years as year}
-						<Select.Item value={year.value} label={year.label}>{year.label}</Select.Item>
-					{/each}
-				</Select.Group>
+				{#each years as year}
+					<Select.Item value={year.value} label={year.label}>{year.label}</Select.Item>
+				{/each}
 			</Select.Content>
-			<Select.Input name="entryYear" />
 		</Select.Root>
 		<SearchIcon class="text-sm font-bold text-primary sm:hidden" />
 		<h4 class="hidden text-xl font-bold text-primary sm:block">Search?</h4>
@@ -109,7 +103,7 @@
 			<input
 				bind:value={searchTerm}
 				type="search"
-				class="w-full rounded border border-solid border-gray-300 bg-white px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none"
+				class="w-full rounded border border-solid border-gray-300 bg-white px-1 py-1.5 text-xs font-normal text-gray-700 transition ease-in-out focus:border-blue-600 focus:bg-white focus:text-gray-700 focus:outline-none sm:text-base"
 				placeholder="Number, Title, Artist or Location"
 				aria-label="Search"
 			/>
