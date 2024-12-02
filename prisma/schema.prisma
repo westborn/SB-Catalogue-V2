@@ -1,0 +1,116 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+  binaryTargets   = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model artistTable {
+  id              Int                 @id @default(autoincrement())
+  email           String              @unique
+  firstName       String              @map("first_name")
+  lastName        String              @map("last_name")
+  phone           String
+  postcode        String
+  firstNations    Indigenous          @default(No) @map("first_nations")
+  bankAccountName String?             @map("bank_account_name")
+  bankBSB         String?             @map("bank_bsb")
+  bankAccount     String?             @map("bank_account")
+  createdAt       DateTime            @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime            @updatedAt @map("updated_at")
+  entries         entryTable[]
+  images          imageTable[]
+  registrations   registrationTable[]
+
+  @@map("artist")
+}
+
+model registrationTable {
+  id                  Int          @id @default(autoincrement())
+  artistId            Int          @map("artist_id")
+  registrationYear    String       @map("registration_year")
+  closed              Boolean      @default(false)
+  bumpIn              String?      @map("bump_in")
+  bumpOut             String?      @map("bump_out")
+  displayRequirements String?      @map("display_requirements")
+  accommodation       Boolean      @default(false)
+  crane               Boolean      @default(false)
+  transport           Boolean      @default(false)
+  createdAt           DateTime     @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+  entries             entryTable[]
+  images              imageTable[]
+  artist              artistTable  @relation(fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@map("registration")
+}
+
+model entryTable {
+  id                  Int               @id @default(autoincrement())
+  artistId            Int               @map("artist_id")
+  accepted            Boolean           @default(false)
+  registrationId      Int               @map("registration_id")
+  description         String?
+  dimensions          String?
+  enterMajorPrize     Boolean           @default(false) @map("enter_major_prize")
+  inOrOut             EntryType         @map("in_or_out")
+  material            String?
+  price               Int               @map("price_in_cents")
+  specialRequirements String?           @map("special_requirements")
+  title               String
+  createdAt           DateTime          @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime          @updatedAt @map("updated_at")
+  artist              artistTable       @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  registration        registrationTable @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  images              imageTable[]
+  location            locationTable?
+
+  @@map("entry")
+}
+
+model imageTable {
+  id               Int                @id @default(autoincrement())
+  artistId         Int                @map("artist_id")
+  registrationId   Int?               @map("registration_id")
+  entryId          Int?               @map("entry_id")
+  cloudId          String             @map("cloud_id")
+  cloudURL         String             @map("cloud_url")
+  originalFileName String             @map("original_file_name")
+  createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+  artist           artistTable        @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  entry            entryTable?        @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  registration     registrationTable? @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+
+  @@map("image")
+}
+
+model locationTable {
+  id            Int        @id @default(autoincrement())
+  exhibitNumber String     @map("exhibit_number")
+  entryId       Int        @unique @map("entry_id")
+  createdAt     DateTime   @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  entry         entryTable @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@map("location")
+}
+
+enum Indigenous {
+  Yes
+  No
+  Declined
+
+  @@map("indigenous")
+}
+
+enum EntryType {
+  Indoor
+  Outdoor
+
+  @@map("entry_type")
+}
