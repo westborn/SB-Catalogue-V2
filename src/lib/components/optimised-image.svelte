@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { AuthInvalidCredentialsError } from '@supabase/supabase-js';
-
 	type Props = {
 		path: string;
 		alt: string;
@@ -13,10 +11,10 @@
 </script>
 
 <picture>
+	<source type="image/webp" srcset={path.replace('.jpg', '.webp')} />
 	<source
 		type="image/avif"
 		srcset={path.replace('.jpg', '.avif').replace('upload', 'upload/f_auto,q_auto')}
 	/>
-	<source type="image/webp" srcset={path.replace('.jpg', '.webp')} />
 	<img src={path} {alt} {width} {height} class={className} />
 </picture>
