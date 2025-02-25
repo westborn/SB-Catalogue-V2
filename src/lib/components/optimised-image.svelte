@@ -10,7 +10,7 @@
 	let { path, alt, width, height, class: className }: Props = $props();
 </script>
 
-<picture>
+<picture class="max-h-[90vh]">
 	<source type="image/webp" srcset={path.replace('.jpg', '.webp')} />
 	<source
 		type="image/avif"
