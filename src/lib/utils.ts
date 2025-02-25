@@ -109,7 +109,7 @@ export function determinePlacement(
 ) {
 	// console.log(`exhibitNumberString: ${exhibitNumberString}, entryYear: ${entryYear}, inOrOut: ${inOrOut}`);
 	// prior to 2024 just use "indoor" or "outdoor"
-	if (!entryYear || entryYear.localeCompare('2024') < 0) {
+	if (entryYear.localeCompare('2024') < 0) {
 		return inOrOut;
 	}
 	//no location determined yet
@@ -130,8 +130,10 @@ export function determinePlacement(
 		return 'Hotel';
 	} else if (exhibitNumber >= 500 && exhibitNumber < 800) {
 		return 'Surf Gallery';
-	} else if (exhibitNumber >= 800 && exhibitNumber < 900) {
+	} else if (exhibitNumber >= 800 && exhibitNumber < 850) {
 		return 'Street Gallery';
+	} else if (exhibitNumber >= 850 && exhibitNumber < 900) {
+		return 'Shop 7 Artspace';
 	}
 }
 
