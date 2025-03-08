@@ -36,7 +36,7 @@
 	<Dialog.Root bind:open={showLargeImage}>
 		<Dialog.Trigger>Open</Dialog.Trigger>
 		<Dialog.Content class="overflow-auto sm:max-h-[1000px] sm:max-w-[460px]">
-			<OptimisedImage {path} alt="alt" width={460} height={0} class="rounded" />
+			<OptimisedImage {path} alt="alt" width={460} height={460} class="rounded" />
 		</Dialog.Content>
 	</Dialog.Root>
 {/if}
