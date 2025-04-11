@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import SearchIcon from 'lucide-svelte/icons/search';
 
 	import { CatalogueCard } from '$lib/components';
@@ -8,6 +8,7 @@
 	import type { CatalogueExhibit } from '$lib/components/server/registrationDB.js';
 	import { determinePlacement } from '$lib/utils.ts';
 	import { tick } from 'svelte';
+	import { browser } from '$app/environment';
 
 	$effect(() => {
 		if (element) {
@@ -20,14 +21,10 @@
 
 	const { data } = $props();
 	let searchTerm = $state(''); // Search term for filtering the exhibits
-
 	const pageSize = 3; // Number of items to scroll at a time
 	let numToDisplay = $state(10);
-
 	let element = $state<HTMLElement>();
-
-	let allExhibits: CatalogueExhibit[] = $derived($page.data.exhibits.filter(() => true) ?? []);
-
+	let allExhibits: CatalogueExhibit[] = $derived((data.exhibits ?? []).filter(() => true) ?? []);
 	// Setup the filter for searching / join a few fields to search on
 	// if no search term entered - return them all
 	let filteredEntries = $derived(
@@ -70,7 +67,7 @@
 
 	// onmount to set year if it is paassed in the URL initially
 	$effect(() => {
-		const url = new URL($page.url);
+		const url = new URL(page.url);
 		const year = url.searchParams.get('year');
 		selectedYear = year ? year : '2025';
 	});
@@ -78,11 +75,11 @@
 		years.find((f) => f.value === selectedYear)?.label ?? 'Select a Year'
 	);
 
-	function handleSelectYear(value: string) {
-		const newURL = new URL($page.url);
-		newURL.searchParams?.set('year', value);
+	async function handleSelectYear() {
+		const newURL = new URL(page.url);
+		newURL.searchParams?.set('year', selectedYear);
 		numToDisplay = 10;
-		goto(newURL);
+		await goto(newURL);
 	}
 </script>
 
@@ -119,7 +116,7 @@
 	{:else}
 		<div>
 			<div class="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-				{#each exhibits as exhibit (exhibit.exhibitNumber)}
+				{#each exhibits as exhibit (exhibit.entryId)}
 					<CatalogueCard {...exhibit} />
 				{/each}
 			</div>
