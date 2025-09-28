@@ -57,6 +57,7 @@
 	};
 
 	const years = [
+		{ value: '2026', label: '2026' },
 		{ value: '2025', label: '2025' },
 		{ value: '2024', label: '2024' },
 		{ value: '2023', label: '2023' },
@@ -69,7 +70,7 @@
 	$effect(() => {
 		const url = new URL(page.url);
 		const year = url.searchParams.get('year');
-		selectedYear = year ? year : '2025';
+		selectedYear = year ? year : '2026';
 	});
 	const triggerYear = $derived(
 		years.find((f) => f.value === selectedYear)?.label ?? 'Select a Year'

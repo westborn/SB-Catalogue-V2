@@ -27,7 +27,6 @@ export type CatalogueExhibit = {
 	exhibitNumber: string;
 };
 
-//TODO fix issue with non accepted entries in prior years not being filtered out
 export const getCatalogueExhibits = async ({
 	rows,
 	offset,
@@ -68,7 +67,8 @@ export const getCatalogueExhibits = async ({
 		join entry on registration.id = entry.registration_id
 		-- -- only enties which have been allocated a location
 		join location on entry.id = location.entry_id
-		LEFT OUTER join image on entry.id = image.entry_id
+		join primary_image on entry.id = primary_image.entry_id
+		join image on primary_image.image_id = image.id
 		where
 		-- -- artist.email = 'epsilonartist@gmail.com' AND
 		registration.registration_year = ${entryYear}
