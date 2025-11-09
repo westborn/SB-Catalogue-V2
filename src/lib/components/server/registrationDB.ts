@@ -22,6 +22,7 @@ export type CatalogueExhibit = {
 	material: string;
 	title: string;
 	price: number;
+	sold: boolean;
 	imageId: number;
 	cloudURL: string;
 	exhibitNumber: string;
@@ -58,6 +59,7 @@ export const getCatalogueExhibits = async ({
 		entry.material,
 		entry.title,
 		entry.price_in_cents as "price",
+		entry.sold,
 		image.id as "imageId",
 		image.cloud_url as "cloudURL",
 		CASE WHEN location.exhibit_number is NULL THEN NULL ELSE location.exhibit_number END as "exhibitNumber"
