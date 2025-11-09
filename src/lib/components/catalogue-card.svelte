@@ -14,12 +14,23 @@
 		price,
 		registrationYear,
 		inOrOut,
-		cloudURL
+		cloudURL,
+		sold
 	} = data;
 </script>
 
 <!-- card -->
-<Card.Root class="flex max-w-[400px] flex-col items-center justify-between rounded-xl border-2">
+<Card.Root
+	class="relative flex max-w-[400px] flex-col items-center justify-between rounded-xl border-2"
+>
+	{#if sold}
+		<div
+			class="absolute right-2 top-2 z-10 rounded-md bg-red-600 px-2 py-1 text-xs font-bold text-white shadow-lg"
+		>
+			SOLD
+		</div>
+	{/if}
+
 	<div class="flex w-full items-center px-2 py-3">
 		<div class="flex items-center justify-center rounded-full bg-blue-500 p-4 font-bold text-white">
 			<p>{exhibitNumber}</p>
