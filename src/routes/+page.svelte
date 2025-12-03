@@ -124,7 +124,7 @@
 		</div>
 		<div bind:this={element as HTMLDivElement}>
 			{exhibits.length == filteredEntries.length
-				? 'No Exhibits Available'
+				? 'No Further Exhibits Available'
 				: 'Loading Exhibits'}.....
 		</div>
 		<div class="mt-10"></div>
