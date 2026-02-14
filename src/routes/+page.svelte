@@ -3,12 +3,13 @@
 	import { page } from '$app/state';
 	import SearchIcon from 'lucide-svelte/icons/search';
 
+	import { EXHIBITION_YEAR } from '../lib/constants';
+
 	import { CatalogueCard } from '$lib/components';
 	import * as Select from '$lib/components/ui/select/index.ts';
 	import type { CatalogueExhibit } from '$lib/components/server/registrationDB.js';
 	import { determinePlacement } from '$lib/utils.ts';
 	import { tick } from 'svelte';
-	import { browser } from '$app/environment';
 
 	$effect(() => {
 		if (element) {
@@ -70,7 +71,7 @@
 	$effect(() => {
 		const url = new URL(page.url);
 		const year = url.searchParams.get('year');
-		selectedYear = year ? year : '2025';
+		selectedYear = year ? year : EXHIBITION_YEAR;
 	});
 	const triggerYear = $derived(
 		years.find((f) => f.value === selectedYear)?.label ?? 'Select a Year'

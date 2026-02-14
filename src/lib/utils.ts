@@ -123,11 +123,21 @@ export function determinePlacement(
 		}
 	}
 
+	// Locations for 2026 are going to be:
+	// Headland						100-399
+	// Hotel							400-429  (use admin for Square)
+	// Country Club				430-499  (use admin for Square)
+	// Surf Gallery				500-799
+	// Street Gallery			800-849
+	// Shop 7 Artspace		850-899  (use admin for Square)
+
 	const exhibitNumber = parseInt(exhibitNumberString);
 	if (exhibitNumber >= 100 && exhibitNumber < 400) {
 		return 'Headland';
-	} else if (exhibitNumber >= 400 && exhibitNumber < 500) {
+	} else if (exhibitNumber >= 400 && exhibitNumber < 430) {
 		return 'Hotel';
+	} else if (exhibitNumber >= 430 && exhibitNumber < 500) {
+		return 'Country Club';
 	} else if (exhibitNumber >= 500 && exhibitNumber < 800) {
 		return 'Surf Gallery';
 	} else if (exhibitNumber >= 800 && exhibitNumber < 850) {
