@@ -6,7 +6,7 @@ import { EXHIBITION_YEAR } from '../lib/constants';
 
 export const load: PageServerLoad = async (event) => {
 	// console.log(`${event.route.id} - LOAD - START`);
-	const entryYear = event.url.searchParams.get('year') ?? '2025';
+	const entryYear = event.url.searchParams.get('year') ?? EXHIBITION_YEAR;
 
 	if (entryYear.localeCompare(PUBLIC_MAX_CATALOGUE_YEAR) > 0) {
 		return { exhibits: [] };

@@ -1,6 +1,6 @@
 # Sculpture Bermagui - Online Catalogue
 
-Version 1.3.3
+Version 1.4.0 Start of 2026
 
 A modern web application for showcasing and managing the Sculpture Bermagui exhibition catalogue. This platform provides an interactive way to browse artwork submissions, view artist information, and explore the collection with advanced filtering and search capabilities.
 
